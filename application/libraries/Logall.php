@@ -5,15 +5,32 @@ class Logall {
 	{
 		$this->CI=& get_instance();
 		$this->CI->load->model('Auditmodel','am',true);	//Load the Auditmodel.php
+		//$this->CI->load->library('form_validation');
+		
 	}
+	
+	public function Login_fail($logarry)
+	{
+		$datetime=date('Y-m-d H:i:s');
+		$data['date']=date('Y-m-d', strtotime($datetime));
+		$data['time']=date('H:i:s', strtotime($datetime));
+		$data['username']=$logarry['username'];
+		$data['password']=$logarry['password'];
+		$data['ipaddress']=$logarry['ipaddress'];
+		$this->CI->am->audit_login_fail($data);
+	}
+	
  
     public function Audit_ssn_start($logarray)	//To call this function when Login (Session Start)
     {
     	$data['user_id']=$logarray['user'];
+    	//$data['email']=$logarray['email'];
     	$datetime=date('Y-m-d H:i:s');
     	$data['date']=date('Y-m-d', strtotime($datetime));
     	$data['time']=date('H:i:s', strtotime($datetime));
+    	$data['ipaddress']=$logarray['ipaddress'];
     	$session_id=$this->CI->am->insert_audit_ssn($data);
+    	
     	return $session_id;
     }
     
