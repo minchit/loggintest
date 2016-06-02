@@ -77,10 +77,7 @@ class Cr extends CI_Controller
 			$this->session->set_userdata($newdata);				
 			$sess=$this->session->userdata();
 			//$session_id=$this->logall->Audit_ssn_start($logarray);
-			//$this->pr($sess);
-			//$newdata2=array(
-					//'username'
-			//);
+			$this->pr($sess);
 			//exit();
 			redirect(base_url());
 		}
@@ -159,24 +156,14 @@ class Cr extends CI_Controller
 				$tmp=$this->cr->save_data($table,$data);
 				if($tmp==1)
 				{
-					
-					//$sess=$this->session->userdata();
-					//echo $sess['session_id'];exit();
+					$sess=$this->session->userdata();
 					$logarray['dbname']=$this->db->database;
 					$logarray['table']=$table;
 					$logarray['status']='insert';
-					//$logarray['session']=$sess;
-					//$logarray['user']=$user_id;
-					//$datetime=date('Y-m-d H:i:s');
-					//$logarray['cur_date']=date('Y-m-d', strtotime($datetime));
-					//$logarray['cur_time']=date('H:i:s', strtotime($datetime));
+					$logarray['session']=$sess;
 					$logarray['data']=$data;
 					$logarray['controller']=$this->router->fetch_class(); // class = controller
 					$logarray['function']=$this->router->fetch_method();
-					//echo $cur.','.$cur2;
-					//exit();
-					//$this->pr($logarray);
-					//exit();
 					$this->logall->Audit_start($logarray);
 				}
 				redirect(base_url());
@@ -197,13 +184,9 @@ class Cr extends CI_Controller
 
 			else{
 				$con['cr_id'] = $_POST['cr_id'];
-
-
-
 				$data['cr_title']=$_POST['cr_title'];
 				$data['cr_description']=$_POST['cr_description'];
 				$pattern = "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$^";
-
 				//$data['cr_submitted']=$_POST['cr_submitted'];
 			$subdate=$_POST['cr_submitted'];
 
@@ -226,8 +209,7 @@ class Cr extends CI_Controller
 				$table='ox_cr_list';
 				$tmp=$this->cr->update_cr($table,$con,$data);
 				if($tmp==1)												//Log for update
-				{
-						
+				{	
 					$sess=$this->session->userdata();
 					//echo $sess['session_id'];exit();
 					$logarray['dbname']=$this->db->database;
@@ -236,19 +218,9 @@ class Cr extends CI_Controller
 					$logarray['session']=$sess;
 					$logarray['controller']=$this->router->fetch_class(); // class = controller
 					$logarray['function']=$this->router->fetch_method();
-					//$logarray['user']=$user_id;
-					//$datetime=date('Y-m-d H:i:s');
-					//$logarray['cur_date']=date('Y-m-d', strtotime($datetime));
-					//$logarray['cur_time']=date('H:i:s', strtotime($datetime));
 					$logarray['old_data']=$cr_data;
 					$logarray['data']=$data;
-					//$logarray['con']=$con;
-					
-					//$this->pr($logarray);
-					//exit();
 					$this->logall->Audit_start($logarray);
-					//echo 'here';
-					//exit();
 				}
 				redirect(base_url());
 			}

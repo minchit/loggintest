@@ -43,6 +43,11 @@ class Auditmodel extends CI_Model
 		return  $insert_id;
 	}
 	
+	function insert_log($data)
+	{
+		$this->db->insert('audit_trn',$data);
+	}
+	
 	function audit_tbl_insert($data)
 	{
 		$this->db->insert('audit_tbl',$data);
@@ -63,8 +68,17 @@ class Auditmodel extends CI_Model
 		$this->db->limit(1);
 		//$this->db->where('u.user_id',$u);
 		//$this->db->where('u.password',$p);
+		
 		$query = $this->db->get();
-		return $query->result();
+		if($query->result()==NULL)
+		{
+			return 0;
+		}
+		else 
+		{
+			return $query->result();
+		}
+				
 	}
 	
 	function last_table_seq_no()
