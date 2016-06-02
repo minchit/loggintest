@@ -52,7 +52,7 @@ class Cr extends CI_Controller
 		echo "window.location.href = '" .base_url()."';</script>" ;
 	}
 	
-	function Sess2()
+	function LoginFail()
 	{
 		
 	}
@@ -63,28 +63,39 @@ class Cr extends CI_Controller
 		{
 			$user_id='minchit';
 			$logarray['user']=$user_id;
+			$logarray['email']='min.thein@nexsysone.com';
 			//$session_id = $this->session->userdata('session_id');
 			//$session_id = session_id();
 			//$this->pr($session_id);
+			$ip = $this->input->ip_address();
+			$logarray['ipaddress']=$ip;
 			$session_id=$this->logall->Audit_ssn_start($logarray);// return the auto increment session_id
 			
 			$newdata = array(
 					'username'  => $user_id,
 					'email'     => 'min.thein@nexsysone.com',
 					'logged_in' => TRUE,
-					'session_id'	=> $session_id			//set session_id	
+					'session_id'	=> $session_id,			//set session_id
+					'ipaddress' => $ip
 			);
 			$this->session->set_userdata($newdata);				
 			$sess=$this->session->userdata();
 			//$session_id=$this->logall->Audit_ssn_start($logarray);
-			$this->pr($sess);
-			//exit();
+			
 			redirect(base_url());
 		}
-		if(isset($_POST['UnsetSession']))
+		else if(isset($_POST['UnsetSession']))
 		{
 			$this->session->sess_destroy();
 			$sess=$this->session->userdata();
+			redirect(base_url());
+		}
+		else if(isset($_POST['LoginFail']))
+		{
+			$logarray['username']='dummy user';
+			$logarray['password']='dummy password';
+			$logarray['ipaddress']=$this->input->ip_address();
+			$this->logall->Login_fail($logarray);
 			redirect(base_url());
 		}
 	}

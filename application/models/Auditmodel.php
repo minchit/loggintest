@@ -34,7 +34,10 @@ class Auditmodel extends CI_Model
 		$this->db->insert('audit_trn',$data);
 	}
 	
-	
+	function audit_login_fail($data)
+	{
+		$this->db->insert('audit_login_failure',$data);
+	}
 	
 	function last_tran_seq_no()
 	{
