@@ -27,9 +27,8 @@ class Logall {
     		$datetime=date('Y-m-d H:i:s');
     		$data['date']=date('Y-m-d', strtotime($datetime));
     		$data['time']=date('H:i:s', strtotime($datetime));
-    		//$session_id=$CI->Auditmodel->insert_audit_ssn($data);
-    		//$session_id=$this->CI->am->insert_audit_ssn($data);
-    		$session_id=$logarray['session'];				//to get current session_id
+    		$session_id=$this->session->userdata();
+    		//$session_id=$logarray['session'];				//to get current session_id
     		foreach ($session_id as $headers => $rows)
     		{
     			//$header=$header.','.$headers.',';
@@ -53,6 +52,76 @@ class Logall {
     			 
     		}
     	}
+    }
+    
+    public function Audit_insert_All($session_id,$logarray)
+    {
+    	$data['session_id']=$session_id;
+    	$tran_seq_no=$this->CI->am->last_tran_seq_no();
+    	$data['tran_seq_no']=((int)$tran_seq_no[0]->tran_seq_no)+1;
+    	$datetime=date('Y-m-d H:i:s');
+    	$data['date']=date('Y-m-d', strtotime($datetime));
+    	$data['time']=date('H:i:s', strtotime($datetime));
+    	$data['task_id']='Controller='.(string)$logarray['controller'].', Function='.(string)$logarray['function'];
+    	$this->CI->am->insert_audit_trn($data);
+    	
+    	$data['session_id']=$session_id;
+    	$data['tran_seq_no']=$tran_seq_no;
+    	$table_seq_no=$this->CI->am->last_table_seq_no();
+    	$data['table_seq_no']=((int)$table_seq_no[0]->table_seq_no)+1;
+    	$data['base_name']=(string)$logarray['dbname'];
+    	$data['table_name']=(string)$logarray['table'];
+    	$data['pkey']='pkey';
+    	$data['pkey']=$this->CI->am->get_p_key((string)$logarray['table']);
+    	$this->CI->am->audit_tbl_insert($data);
+    	
+    	//field insert start
+    	$data['session_id']=$session_id;
+    	$data['tran_seq_no']=$tran_seq_no;
+    	$data['table_seq_no']=$table_seq_no;
+    	$newdata=$logarray['data'];
+    	$header='';
+    	$row='';
+    	foreach ($newdata as $headers => $rows)
+    	{
+    		if(!EMPTY($rows))
+    		{
+    			$header=$header.','.$headers.',';
+    			$row=$row.','.$rows.',';
+    		}
+    	
+    	}
+    	$data['field_id']=$header;
+    	$data['new_value']=$row;
+    	 
+    	$this->CI->am->audit_fld_insert($data);
+    	
+    	//field insert update
+    	$data['session_id']=$session_id;
+    	$data['tran_seq_no']=$tran_seq_no;
+    	$data['table_seq_no']=$table_seq_no;
+    	$header='';
+    	$row;$oldrow;
+    	foreach ($logarray['data'] as $headers => $rows)
+    	{
+    		if(!EMPTY($rows))
+    		{
+    			$header=$header.','.$headers.',';
+    			$row=$row.','.$rows.',';
+    		}
+    	}
+    	foreach ($logarray['old_data'] as $headers => $rows)
+    	{
+    		if(!EMPTY($rows))
+    		{
+    			//$header=$header.','.$headers.',';
+    			$oldrow=$row.','.$rows.',';
+    		}
+    	}
+    	$data['field_id']=$header;
+    	$data['old_value']=$oldrow;
+    	$data['new_value']=$row;
+    	$this->CI->am->audit_fld_insert($data);
     }
     
     public function Audit_trn($session_id,$logarray)

@@ -160,12 +160,12 @@ class Cr extends CI_Controller
 				if($tmp==1)
 				{
 					
-					$sess=$this->session->userdata();
+					//$sess=$this->session->userdata();
 					//echo $sess['session_id'];exit();
 					$logarray['dbname']=$this->db->database;
 					$logarray['table']=$table;
 					$logarray['status']='insert';
-					$logarray['session']=$sess;
+					//$logarray['session']=$sess;
 					//$logarray['user']=$user_id;
 					//$datetime=date('Y-m-d H:i:s');
 					//$logarray['cur_date']=date('Y-m-d', strtotime($datetime));
