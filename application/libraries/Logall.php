@@ -111,24 +111,31 @@ class Logall {
 	    		{
 	    			$header=$header.','.$headers.',';
 	    			$row=$row.','.$rows.',';
+	    			
 	    		}
 	    	}
+	    	
 	    	$primary1=$logarray['primary'];
     		$olddata=$this->CI->am->selectprimary($primary1,$data['table_name']);
-    		
-	    	foreach ($olddata as $headers => $rows)
+    		$oldrow=array();
+    		//$this->pr($newdata);
+    		//$this->pr($olddata);
+    		$olddemo=json_decode(json_encode($olddata),true);
+    		//$this->pr($olddemo);
+    		//exit();
+	    	foreach ($olddemo as $rows)
 	    	{
 	    		if(!EMPTY($rows))
 	    		{
-	    			//$header=$header.','.$headers.',';
 	    			$oldrow=$row.','.$rows.',';
-	    			
+	    			//$header2=$header.','.$headers.',';
+
 	    		}
 	    	}
 	    	$data['field_id']=$header;
 	    	$data['old_value']=$oldrow;
-	    	$this->pr($data['old_value']);
-	    	exit();
+	    	
+	    	
 	    	$data['new_value']=$row;
     	}
     	else if($logarray['status']=='delete')

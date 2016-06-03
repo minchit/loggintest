@@ -92,7 +92,8 @@ class Auditmodel extends CI_Model
 			$this->db->where($primary1);
 			
 			$query=$this->db->get();
-		return $query->result_array();
+		//return $query->result_array();
+		return $query->row();
 	}
 	
 	function save_data($table,$data)
