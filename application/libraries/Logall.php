@@ -36,11 +36,12 @@ class Logall {
     
     public function Audit_start($logarray)	//Call the function when the transaction start
     {
-    	$session_id = session_id();
-    	$this->pr($session_id);
+    	//$session_id = session_id();
+    	//$this->pr($session_id);
     	$session_id=$logarray['session'];
-    	$this->pr($session_id);
-    	$this->pr($logarray);
+    	
+    	//$this->pr($session_id);
+    	//$this->pr($logarray);
     	
     	if (!EMPTY($logarray['session']['session_id']))
     	{
@@ -48,10 +49,11 @@ class Logall {
     		foreach ($session_id as $headers => $rows)
     		{
     			//$header=$header.','.$headers.',';
-    			$session_id=$rows;							
+    			if($headers=='session_id')
+    			{$session_id=$rows;}		
     			//$row=$row.','.$rows.',';
     		}
-    		$this->pr($session_id);
+    		
     		$this->Audit_insert_All($session_id,$logarray);
     		//exit();
     	}
@@ -70,7 +72,7 @@ class Logall {
     		$tran_seq_no=$this->CI->am->last_tran_seq_no();
     		$data['tran_seq_no']=((int)$tran_seq_no[0]->tran_seq_no)+1;
     	}
-    	$this->pr($tran_seq_no);
+    	//$this->pr($tran_seq_no);
 		//exit();
     	$datetime=date('Y-m-d H:i:s');
     	$data['date']=date('Y-m-d', strtotime($datetime));
@@ -78,11 +80,13 @@ class Logall {
     	$data['task_id']='Controller='.(string)$logarray['controller'].', Function='.(string)$logarray['function'];
     	$data['base_name']=(string)$logarray['dbname'];
     	$data['table_name']=(string)$logarray['table'];
-    	$data['pkey']='pkey';
+    	//$data['pkey']='pkey';
     	$data['pkey']=$this->CI->am->get_p_key((string)$logarray['table']);
     	
     	
+    	
     	$newdata=$logarray['data'];
+    	
     	$header='';
     	$row='';
     	$oldrow='';
@@ -101,7 +105,7 @@ class Logall {
     	}
     	else if($logarray['status']=='update')// if the transaction is update
     	{
-	    	foreach ($logarray['data'] as $headers => $rows)
+	    	foreach ($newdata as $headers => $rows)
 	    	{
 	    		if(!EMPTY($rows))
 	    		{
@@ -109,16 +113,22 @@ class Logall {
 	    			$row=$row.','.$rows.',';
 	    		}
 	    	}
-	    	foreach ($logarray['old_data'] as $headers => $rows)
+	    	$primary1=$logarray['primary'];
+    		$olddata=$this->CI->am->selectprimary($primary1,$data['table_name']);
+    		
+	    	foreach ($olddata as $headers => $rows)
 	    	{
 	    		if(!EMPTY($rows))
 	    		{
 	    			//$header=$header.','.$headers.',';
 	    			$oldrow=$row.','.$rows.',';
+	    			
 	    		}
 	    	}
 	    	$data['field_id']=$header;
 	    	$data['old_value']=$oldrow;
+	    	$this->pr($data['old_value']);
+	    	exit();
 	    	$data['new_value']=$row;
     	}
     	else if($logarray['status']=='delete')

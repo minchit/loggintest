@@ -85,6 +85,16 @@ class Auditmodel extends CI_Model
 		return $p_key;
 	}
 	
+	function selectprimary($primary1,$table)
+	{
+		$this->db->select('*');
+			$this->db->from($table);
+			$this->db->where($primary1);
+			
+			$query=$this->db->get();
+		return $query->result_array();
+	}
+	
 	function save_data($table,$data)
 	{
 	

@@ -80,6 +80,7 @@ class Cr extends CI_Controller
 			);
 			$this->session->set_userdata($newdata);				
 			$sess=$this->session->userdata();
+			
 			//$session_id=$this->logall->Audit_ssn_start($logarray);
 			
 			redirect(base_url());
@@ -229,8 +230,9 @@ class Cr extends CI_Controller
 					$logarray['session']=$sess;
 					$logarray['controller']=$this->router->fetch_class(); // class = controller
 					$logarray['function']=$this->router->fetch_method();
-					$logarray['old_data']=$cr_data;
+					//$logarray['old_data']=$cr_data;
 					$logarray['data']=$data;
+					$logarray['primary']=$con; //set the primary key to get the old data
 					$this->logall->Audit_start($logarray);
 				}
 				redirect(base_url());
