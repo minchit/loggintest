@@ -105,38 +105,43 @@ class Logall {
     	}
     	else if($logarray['status']=='update')// if the transaction is update
     	{
+    		$newrow='';
+    		//$this->pr($newdata);exit();
 	    	foreach ($newdata as $headers => $rows)
 	    	{
 	    		if(!EMPTY($rows))
 	    		{
 	    			$header=$header.','.$headers.',';
-	    			$row=$row.','.$rows.',';
+	    			$newrow=$newrow.','.$rows.',';
 	    			
 	    		}
 	    	}
 	    	
 	    	$primary1=$logarray['primary'];
     		$olddata=$this->CI->am->selectprimary($primary1,$data['table_name']);
-    		$oldrow=array();
+    		$oldrow='';
     		//$this->pr($newdata);
     		//$this->pr($olddata);
     		$olddemo=json_decode(json_encode($olddata),true);
+    		//$row='';
     		//$this->pr($olddemo);
     		//exit();
 	    	foreach ($olddemo as $rows)
 	    	{
 	    		if(!EMPTY($rows))
 	    		{
-	    			$oldrow=$row.','.$rows.',';
+	    			$oldrow=$oldrow.','.$rows.',';
 	    			//$header2=$header.','.$headers.',';
-
+	    			
 	    		}
-	    	}
+	    	}//$this->pr($oldrow);exit();
+	    	
 	    	$data['field_id']=$header;
 	    	$data['old_value']=$oldrow;
 	    	
 	    	
-	    	$data['new_value']=$row;
+	    	$data['new_value']=$newrow;
+	    	
     	}
     	else if($logarray['status']=='delete')
     	{

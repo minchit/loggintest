@@ -196,6 +196,7 @@ class Cr extends CI_Controller
 
 			else{
 				$con['cr_id'] = $_POST['cr_id'];
+				$data['cr_id'] = $_POST['cr_id'];
 				$data['cr_title']=$_POST['cr_title'];
 				$data['cr_description']=$_POST['cr_description'];
 				$pattern = "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$^";
@@ -219,7 +220,7 @@ class Cr extends CI_Controller
 				else {$data['cr_status_processed']=$date;}
 				$data['cr_processed_by']=$_POST['cr_processed_by'];
 				$table='ox_cr_list';
-				$tmp=$this->cr->update_cr($table,$con,$data);
+				$tmp=$this->cr->update_cr($table,$con,$data,$data['cr_id']);
 				if($tmp==1)												//Log for update
 				{	
 					$sess=$this->session->userdata();
